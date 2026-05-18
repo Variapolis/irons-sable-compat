@@ -21,17 +21,6 @@ Fixes all spells exept portal frames, they don't crash but disconnect if the phy
 > specific internal methods. If either mod changes its internals, mixins may
 > fail to apply, targeting may break, or server startup may crash.
 
-## What It Fixes
-
-| Spell Category | Mixin | Target Class |
-|---|---|---|
-| Teleport (Teleport, Blood Step, Frost Step, Abyssal Shroud) & Line of Sight | `UtilsMixin` | `Utils.handleSpellTeleport` / `Utils.hasLineOfSight` |
-| Portal entity placement | `PortalSpellMixin` | `PortalSpell.handleEntityPortal` |
-| Portal teleportation | `PortalEntityMixin` | `PortalEntity.checkForEntitiesToTeleport` |
-| Portal frame sync + teleport | `PortalFrameBlockEntityMixin` | `PortalFrameBlockEntity.serverTick` / `teleport` |
-| Touch Dig | `TouchDigSpellMixin` | `TouchDigSpell.onCast` |
-| All raycast spells (Ray of Frost, Ray of Siphoning, etc.) | `RaycastBuilderMixin` | `RaycastBuilder.performRaycast` |
-| Shadow Slash | `ShadowSlashMixin` | `ShadowSlashSpell.onCast` |
 
 ## Fragility Assumptions
 
