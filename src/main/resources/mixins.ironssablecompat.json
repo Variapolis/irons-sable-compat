@@ -11,7 +11,6 @@
     "TouchDigSpellMixin",
     "PortalFrameBlockEntityMixin",
     "RaycastBuilderMixin",
-    "ShadowSlashMixin",
     "MagicManagerMixin",
     "ClientMagicDataMixin"
   ],

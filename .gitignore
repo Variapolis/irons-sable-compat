@@ -1,0 +1,23 @@
+# Gradle
+.gradle/
+build/
+/build
+
+# Compiled class files
+*.class
+bin/
+out/
+
+# IDE files (IntelliJ, VSCode, Eclipse)
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+.settings/
+.classpath
+.project
+
+# OS generated files
+.DS_Store
+Thumbs.db

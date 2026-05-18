@@ -13,28 +13,13 @@ import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.entity.LivingEntity;
+
 @Mixin(value = Utils.class, remap = false)
 public class UtilsMixin {
-
-    @ModifyArgs(
-        method = "hasLineOfSight(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Z)Z",
-        remap = false,
-        at = @At("HEAD")
-    )
-    private static void modifyLineOfSightArgs(Args args) {
-        Level level = args.get(0);
-        Vec3 start = args.get(1);
-        Vec3 end = args.get(2);
-        if (start != null && end != null) {
-            double distSqr = start.distanceToSqr(end);
-            if (distSqr > 100000.0) {
-                Vec3 projectedStart = SableCompanion.INSTANCE.projectOutOfSubLevel(level, start);
-                Vec3 projectedEnd = SableCompanion.INSTANCE.projectOutOfSubLevel(level, end);
-                args.set(1, projectedStart);
-                args.set(2, projectedEnd);
-            }
-        }
-    }
 
     @ModifyArgs(
         method = "handleSpellTeleport",
@@ -58,15 +43,7 @@ public class UtilsMixin {
         Vec3 realWorldDest = SableCompanion.INSTANCE.projectOutOfSubLevel(entity.level(), dest);
 
         // Case 2: destination is ON a ship - project INTO it
-        SubLevelAccess subLevel = null;
-        dev.ryanhcode.sable.companion.math.BoundingBox3d bounds = new dev.ryanhcode.sable.companion.math.BoundingBox3d(
-            realWorldDest.x - 0.01, realWorldDest.y - 0.01, realWorldDest.z - 0.01,
-            realWorldDest.x + 0.01, realWorldDest.y + 0.01, realWorldDest.z + 0.01
-        );
-        for (SubLevelAccess sl : SableCompanion.INSTANCE.getAllIntersecting(entity.level(), bounds)) {
-            subLevel = sl;
-            break;
-        }
+        SubLevelAccess subLevel = SableCompanion.INSTANCE.getContaining(entity.level(), realWorldDest);
         System.out.println("[IronsSableCompat] subLevel=" + subLevel);
 
         if (subLevel != null) {
@@ -80,5 +57,47 @@ public class UtilsMixin {
         args.set(2, dest.x);
         args.set(3, dest.y);
         args.set(4, dest.z);
+    }
+
+    @Inject(
+        method = "raycastForBlock",
+        remap = false,
+        at = @At("RETURN"),
+        cancellable = true
+    )
+    private static void projectRaycastForBlock(Level level, Vec3 start, Vec3 end, ClipContext.Fluid clipContext, CallbackInfoReturnable<BlockHitResult> cir) {
+        BlockHitResult original = cir.getReturnValue();
+        Vec3 hitLocation = original.getLocation();
+        Vec3 projected = SableCompanion.INSTANCE.projectOutOfSubLevel(level, hitLocation);
+
+        if (projected.x != hitLocation.x || projected.y != hitLocation.y || projected.z != hitLocation.z) {
+            cir.setReturnValue(new BlockHitResult(
+                projected,
+                original.getDirection(),
+                BlockPos.containing(projected),
+                original.isInside()
+            ));
+        }
+    }
+
+    @Inject(
+        method = "getTargetBlock",
+        remap = false,
+        at = @At("RETURN"),
+        cancellable = true
+    )
+    private static void projectGetTargetBlock(Level level, LivingEntity entity, ClipContext.Fluid clipContext, double reach, CallbackInfoReturnable<BlockHitResult> cir) {
+        BlockHitResult original = cir.getReturnValue();
+        Vec3 hitLocation = original.getLocation();
+        Vec3 projected = SableCompanion.INSTANCE.projectOutOfSubLevel(level, hitLocation);
+
+        if (projected.x != hitLocation.x || projected.y != hitLocation.y || projected.z != hitLocation.z) {
+            cir.setReturnValue(new BlockHitResult(
+                projected,
+                original.getDirection(),
+                BlockPos.containing(projected),
+                original.isInside()
+            ));
+        }
     }
 }

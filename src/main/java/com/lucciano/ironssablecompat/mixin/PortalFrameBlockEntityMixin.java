@@ -42,20 +42,4 @@ public class PortalFrameBlockEntityMixin {
             }
         }
     }
-
-    @org.spongepowered.asm.mixin.injection.Redirect(
-        method = "lambda$teleport$1",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;teleportTo(Lnet/minecraft/server/level/ServerLevel;DDDLjava/util/Set;FF)Z"
-        )
-    )
-    private static boolean redirectFrameTeleport(net.minecraft.world.entity.Entity instance, net.minecraft.server.level.ServerLevel level, double x, double y, double z, java.util.Set<net.minecraft.world.entity.RelativeMovement> relativeMovements, float yaw, float pitch) {
-        // By calling the simple teleportTo, Sable's physics mixins can properly intercept it
-        // and attach the player to the sub-level!
-        instance.teleportTo(x, y, z);
-        instance.setYRot(yaw);
-        instance.setXRot(pitch);
-        return true;
-    }
 }
