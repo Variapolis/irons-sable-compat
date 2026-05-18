@@ -34,6 +34,7 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 public class RaycastBuilderMixin {
 
     @Shadow @Final private Level level;
+    @Shadow @Final private Entity originEntity;
 
     /**
      * Redirect Level.clip() inside performRaycast() to project the block
@@ -49,6 +50,15 @@ public class RaycastBuilderMixin {
     )
     private BlockHitResult redirectLevelClip(Level levelInstance, ClipContext clipContext) {
         BlockHitResult original = levelInstance.clip(clipContext);
+
+        if (originEntity != null) {
+            Vec3 casterPos = originEntity.getEyePosition();
+            Vec3 realWorldCasterPos = SableCompanion.INSTANCE.projectOutOfSubLevel(level, casterPos);
+            // If the caster is inside a sub-level, keep it in the sub-level space
+            if (realWorldCasterPos.distanceToSqr(casterPos) > 0.01) {
+                return original;
+            }
+        }
 
         // Project the hit location out of sub-level space
         Vec3 hitLocation = original.getLocation();

@@ -1,18 +1,55 @@
-Here's a git description you can use for the README or repository description: (irony)
+# Iron's Spells x Sable Compat
 
----
-fixes teleport, frost step, blood step and dig spells. Portal spell and frame work as well, a big buggy to call fixed but at least no longer crash.
+> ⚠️ AI-generated hotfix mod — not an official release. This is a temporary
+> compatibility patch until Iron's Spells 'n Spellbooks or Sable officially
+> integrates Sable Companion support.
 
-**Iron's Spells x Sable Compat**
+Fixes teleport, Frost Step, Blood Step, Dig, Portal (entity + frame), and
+raycast-based spells from Iron's Spells 'n Spellbooks when used on or near
+Create Aeronautics / Sable physics ships (NeoForge 1.21.1).
 
-> ⚠️ AI-generated hotfix mod — not an official release. This is a temporary compatibility patch until Iron's Spells 'n Spellbooks or Sable officially integrates Sable Companion support.
+## Tested Versions
 
-Fixes teleport spells from Iron's Spells 'n Spellbooks breaking when used on or near assembled Create Aeronautics / Sable physics ships on NeoForge 1.21.1.
+| Mod | Version | Notes |
+|---|---|---|
+| Minecraft | 1.21.1 | |
+| NeoForge | 21.1.172 | |
+| Iron's Spells 'n Spellbooks | **3.15.6** | Hard-pinned — do NOT auto-update |
+| Sable | **1.2.2** | Hard-pinned — do NOT auto-update |
+| Create Aeronautics (bundles Sable) | **1.2.1** | |
+| Sable Companion API | 1.6.0 | Bundled inside this mod (JiJ) |
 
-Sable stores physics contraptions in hidden sub-levels with extreme plot coordinates. Iron's Spells that interact physically (Teleport, Blood Step, Abyssal Shroud, portal, touch dig) are unaware of this, causing players to teleport to the wrong location or crash when a ship is involved. This mod uses the Sable Companion API to intercept and remap teleport coordinates correctly.
+> **⚠️ Do NOT auto-update Iron's or Sable.** This mod uses Mixins that target
+> specific internal methods. If either mod changes its internals, mixins may
+> fail to apply, targeting may break, or server startup may crash.
 
-**This mod will become obsolete once Iron's Spells or Sable ships an official fix. Check both projects before using this.**
+## What It Fixes
+
+| Spell Category | Mixin | Target Class |
+|---|---|---|
+| Teleport (Teleport, Blood Step, Frost Step, Abyssal Shroud) & Line of Sight | `UtilsMixin` | `Utils.handleSpellTeleport` / `Utils.hasLineOfSight` |
+| Portal entity placement | `PortalSpellMixin` | `PortalSpell.handleEntityPortal` |
+| Portal teleportation | `PortalEntityMixin` | `PortalEntity.checkForEntitiesToTeleport` |
+| Portal frame sync + teleport | `PortalFrameBlockEntityMixin` | `PortalFrameBlockEntity.serverTick` / `teleport` |
+| Touch Dig | `TouchDigSpellMixin` | `TouchDigSpell.onCast` |
+| All raycast spells (Ray of Frost, Ray of Siphoning, etc.) | `RaycastBuilderMixin` | `RaycastBuilder.performRaycast` |
+| Shadow Slash | `ShadowSlashMixin` | `ShadowSlashSpell.onCast` |
+
+## Fragility Assumptions
+
+This mod assumes:
+- **Sable Companion APIs** (`SableCompanion.INSTANCE.projectOutOfSubLevel`, `getContaining`, `SubLevelAccess.logicalPose()`) exist and behave as documented
+- **Iron's Spells internals** (`Utils.handleSpellTeleport`, `Utils.hasLineOfSight`, `PortalSpell.handleEntityPortal`, `PortalEntity.lambda$checkForEntitiesToTeleport$1`, `PortalFrameBlockEntity.serverTick`, `TouchDigSpell.onCast`, `RaycastBuilder.performRaycast`, `ShadowSlashSpell.onCast`) remain stable at the method-signature level
+- **Mixin targets** (method names, parameter types, invoke targets) remain unchanged
+
+If either mod updates aggressively:
+- ❌ Mixins may fail to apply (crash at startup)
+- ❌ Method targeting may break (silent misbehavior)
+- ❌ Server startup may crash with `MixinApplyError`
+
+## Disclaimer
 
 - Generated with AI assistance (Claude, Anthropic)
 - Not affiliated with iron431 (Iron's Spells) or ryanhcode (Sable)
 - Use at your own risk
+- **This mod will become obsolete once Iron's Spells or Sable ships an official fix**

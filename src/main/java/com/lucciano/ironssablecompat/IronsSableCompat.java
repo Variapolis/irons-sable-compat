@@ -1,4 +1,4 @@
-package com.yourname.ironssablecompat;
+package com.lucciano.ironssablecompat;
 
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;

@@ -47,10 +47,20 @@ repositories {
 
 dependencies {
     // Sable Companion - JiJ'd so it ships inside your mod
-    jarJar(api("dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:[1.0,)")) {
+    jarJar(api("dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:[1.6.0,1.6.1)")) {
         version { prefer project.sable_companion_version }
     }
 
     // Iron's Spells - implementation so it loads at runtime during dev
     implementation "curse.maven:irons-spells-n-spellbooks-855414:7907341"
+}
+
+processResources {
+    def replaceProperties = [
+        mod_version: project.mod_version
+    ]
+    inputs.properties replaceProperties
+    filesMatching(['META-INF/neoforge.mods.toml']) {
+        expand replaceProperties
+    }
 }

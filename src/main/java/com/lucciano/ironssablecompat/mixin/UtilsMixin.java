@@ -4,14 +4,37 @@ import dev.ryanhcode.sable.companion.SableCompanion;
 import dev.ryanhcode.sable.companion.SubLevelAccess;
 import io.redspace.ironsspellbooks.api.util.Utils;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(value = Utils.class, remap = false)
 public class UtilsMixin {
+
+    @ModifyArgs(
+        method = "hasLineOfSight(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Z)Z",
+        remap = false,
+        at = @At("HEAD")
+    )
+    private static void modifyLineOfSightArgs(Args args) {
+        Level level = args.get(0);
+        Vec3 start = args.get(1);
+        Vec3 end = args.get(2);
+        if (start != null && end != null) {
+            double distSqr = start.distanceToSqr(end);
+            if (distSqr > 100000.0) {
+                Vec3 projectedStart = SableCompanion.INSTANCE.projectOutOfSubLevel(level, start);
+                Vec3 projectedEnd = SableCompanion.INSTANCE.projectOutOfSubLevel(level, end);
+                args.set(1, projectedStart);
+                args.set(2, projectedEnd);
+            }
+        }
+    }
 
     @ModifyArgs(
         method = "handleSpellTeleport",

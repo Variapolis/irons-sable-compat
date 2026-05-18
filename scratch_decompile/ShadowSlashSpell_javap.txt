@@ -1,0 +1,658 @@
+Compiled from "ShadowSlashSpell.java"
+public class io.redspace.ironsspellbooks.spells.ender.ShadowSlashSpell extends io.redspace.ironsspellbooks.api.spells.AbstractSpell {
+  private final net.minecraft.resources.ResourceLocation spellId;
+
+  private final io.redspace.ironsspellbooks.api.config.DefaultConfig defaultConfig;
+
+  public java.util.List<net.minecraft.network.chat.MutableComponent> getUniqueInfo(int, net.minecraft.world.entity.LivingEntity);
+    Code:
+       0: ldc           #1                  // String ui.irons_spellbooks.damage
+       2: iconst_1
+       3: anewarray     #3                  // class java/lang/Object
+       6: dup
+       7: iconst_0
+       8: aload_0
+       9: iload_1
+      10: aload_2
+      11: invokevirtual #5                  // Method getDamageText:(ILnet/minecraft/world/entity/LivingEntity;)Ljava/lang/String;
+      14: aastore
+      15: invokestatic  #11                 // InterfaceMethod net/minecraft/network/chat/Component.translatable:(Ljava/lang/String;[Ljava/lang/Object;)Lnet/minecraft/network/chat/MutableComponent;
+      18: invokestatic  #17                 // InterfaceMethod java/util/List.of:(Ljava/lang/Object;)Ljava/util/List;
+      21: areturn
+
+  public io.redspace.ironsspellbooks.spells.ender.ShadowSlashSpell();
+    Code:
+       0: aload_0
+       1: invokespecial #23                 // Method io/redspace/ironsspellbooks/api/spells/AbstractSpell."<init>":()V
+       4: aload_0
+       5: ldc           #31                 // String irons_spellbooks
+       7: ldc           #33                 // String shadow_slash
+       9: invokestatic  #35                 // Method net/minecraft/resources/ResourceLocation.fromNamespaceAndPath:(Ljava/lang/String;Ljava/lang/String;)Lnet/minecraft/resources/ResourceLocation;
+      12: putfield      #41                 // Field spellId:Lnet/minecraft/resources/ResourceLocation;
+      15: aload_0
+      16: new           #45                 // class io/redspace/ironsspellbooks/api/config/DefaultConfig
+      19: dup
+      20: invokespecial #47                 // Method io/redspace/ironsspellbooks/api/config/DefaultConfig."<init>":()V
+      23: getstatic     #48                 // Field io/redspace/ironsspellbooks/api/spells/SpellRarity.COMMON:Lio/redspace/ironsspellbooks/api/spells/SpellRarity;
+      26: invokevirtual #54                 // Method io/redspace/ironsspellbooks/api/config/DefaultConfig.setMinRarity:(Lio/redspace/ironsspellbooks/api/spells/SpellRarity;)Lio/redspace/ironsspellbooks/api/config/DefaultConfig;
+      29: getstatic     #58                 // Field io/redspace/ironsspellbooks/api/registry/SchoolRegistry.ENDER_RESOURCE:Lnet/minecraft/resources/ResourceLocation;
+      32: invokevirtual #63                 // Method io/redspace/ironsspellbooks/api/config/DefaultConfig.setSchoolResource:(Lnet/minecraft/resources/ResourceLocation;)Lio/redspace/ironsspellbooks/api/config/DefaultConfig;
+      35: iconst_5
+      36: invokevirtual #67                 // Method io/redspace/ironsspellbooks/api/config/DefaultConfig.setMaxLevel:(I)Lio/redspace/ironsspellbooks/api/config/DefaultConfig;
+      39: ldc2_w        #71                 // double 15.0d
+      42: invokevirtual #73                 // Method io/redspace/ironsspellbooks/api/config/DefaultConfig.setCooldownSeconds:(D)Lio/redspace/ironsspellbooks/api/config/DefaultConfig;
+      45: invokevirtual #77                 // Method io/redspace/ironsspellbooks/api/config/DefaultConfig.build:()Lio/redspace/ironsspellbooks/api/config/DefaultConfig;
+      48: putfield      #81                 // Field defaultConfig:Lio/redspace/ironsspellbooks/api/config/DefaultConfig;
+      51: aload_0
+      52: bipush        15
+      54: putfield      #85                 // Field manaCostPerLevel:I
+      57: aload_0
+      58: iconst_5
+      59: putfield      #89                 // Field baseSpellPower:I
+      62: aload_0
+      63: iconst_1
+      64: putfield      #92                 // Field spellPowerPerLevel:I
+      67: aload_0
+      68: iconst_0
+      69: putfield      #95                 // Field castTime:I
+      72: aload_0
+      73: bipush        30
+      75: putfield      #98                 // Field baseManaCost:I
+      78: return
+
+  public io.redspace.ironsspellbooks.api.spells.CastType getCastType();
+    Code:
+       0: getstatic     #101                // Field io/redspace/ironsspellbooks/api/spells/CastType.INSTANT:Lio/redspace/ironsspellbooks/api/spells/CastType;
+       3: areturn
+
+  public io.redspace.ironsspellbooks.api.config.DefaultConfig getDefaultConfig();
+    Code:
+       0: aload_0
+       1: getfield      #81                 // Field defaultConfig:Lio/redspace/ironsspellbooks/api/config/DefaultConfig;
+       4: areturn
+
+  public net.minecraft.resources.ResourceLocation getSpellResource();
+    Code:
+       0: aload_0
+       1: getfield      #41                 // Field spellId:Lnet/minecraft/resources/ResourceLocation;
+       4: areturn
+
+  public void onClientCast(net.minecraft.world.level.Level, int, net.minecraft.world.entity.LivingEntity, io.redspace.ironsspellbooks.api.spells.ICastData);
+    Code:
+       0: aload_0
+       1: aload_1
+       2: iload_2
+       3: aload_3
+       4: aload         4
+       6: invokespecial #107                // Method io/redspace/ironsspellbooks/api/spells/AbstractSpell.onClientCast:(Lnet/minecraft/world/level/Level;ILnet/minecraft/world/entity/LivingEntity;Lio/redspace/ironsspellbooks/api/spells/ICastData;)V
+       9: aload_3
+      10: aload_3
+      11: invokevirtual #111                // Method net/minecraft/world/entity/LivingEntity.getYRot:()F
+      14: invokevirtual #117                // Method net/minecraft/world/entity/LivingEntity.setYBodyRot:(F)V
+      17: return
+
+  public java.util.Optional<net.minecraft.sounds.SoundEvent> getCastStartSound();
+    Code:
+       0: getstatic     #121                // Field io/redspace/ironsspellbooks/registries/SoundRegistry.SHADOW_SLASH:Lnet/neoforged/neoforge/registries/DeferredHolder;
+       3: invokevirtual #127                // Method net/neoforged/neoforge/registries/DeferredHolder.get:()Ljava/lang/Object;
+       6: checkcast     #133                // class net/minecraft/sounds/SoundEvent
+       9: invokestatic  #135                // Method java/util/Optional.of:(Ljava/lang/Object;)Ljava/util/Optional;
+      12: areturn
+
+  public void onCast(net.minecraft.world.level.Level, int, net.minecraft.world.entity.LivingEntity, io.redspace.ironsspellbooks.api.spells.CastSource, io.redspace.ironsspellbooks.api.magic.MagicData);
+    Code:
+       0: ldc           #140                // float 12.0f
+       2: fstore        6
+       4: aload_3
+       5: invokevirtual #141                // Method net/minecraft/world/entity/LivingEntity.getForward:()Lnet/minecraft/world/phys/Vec3;
+       8: astore        7
+      10: aload_1
+      11: aload_3
+      12: invokevirtual #145                // Method net/minecraft/world/entity/LivingEntity.getEyePosition:()Lnet/minecraft/world/phys/Vec3;
+      15: aload_3
+      16: invokevirtual #145                // Method net/minecraft/world/entity/LivingEntity.getEyePosition:()Lnet/minecraft/world/phys/Vec3;
+      19: aload         7
+      21: fload         6
+      23: f2d
+      24: invokevirtual #148                // Method net/minecraft/world/phys/Vec3.scale:(D)Lnet/minecraft/world/phys/Vec3;
+      27: invokevirtual #154                // Method net/minecraft/world/phys/Vec3.add:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+      30: getstatic     #158                // Field net/minecraft/world/level/ClipContext$Fluid.NONE:Lnet/minecraft/world/level/ClipContext$Fluid;
+      33: invokestatic  #164                // Method io/redspace/ironsspellbooks/api/util/Utils.raycastForBlock:(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/level/ClipContext$Fluid;)Lnet/minecraft/world/phys/BlockHitResult;
+      36: invokevirtual #170                // Method net/minecraft/world/phys/BlockHitResult.getLocation:()Lnet/minecraft/world/phys/Vec3;
+      39: astore        8
+      41: aload_3
+      42: invokevirtual #175                // Method net/minecraft/world/entity/LivingEntity.getHitbox:()Lnet/minecraft/world/phys/AABB;
+      45: aload         8
+      47: aload_3
+      48: invokevirtual #145                // Method net/minecraft/world/entity/LivingEntity.getEyePosition:()Lnet/minecraft/world/phys/Vec3;
+      51: invokevirtual #179                // Method net/minecraft/world/phys/Vec3.subtract:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+      54: invokevirtual #182                // Method net/minecraft/world/phys/AABB.expandTowards:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/AABB;
+      57: ldc2_w        #188                // double 2.0d
+      60: invokevirtual #190                // Method net/minecraft/world/phys/AABB.inflate:(D)Lnet/minecraft/world/phys/AABB;
+      63: astore        9
+      65: aload_1
+      66: aload_3
+      67: aload         9
+      69: aload_3
+      70: invokedynamic #194,  0            // InvokeDynamic #0:test:(Lnet/minecraft/world/entity/LivingEntity;)Ljava/util/function/Predicate;
+      75: invokevirtual #198                // Method net/minecraft/world/level/Level.getEntities:(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;)Ljava/util/List;
+      78: astore        10
+      80: aload         10
+      82: aload_3
+      83: invokedynamic #204,  0            // InvokeDynamic #1:applyAsDouble:(Lnet/minecraft/world/entity/LivingEntity;)Ljava/util/function/ToDoubleFunction;
+      88: invokestatic  #208                // InterfaceMethod java/util/Comparator.comparingDouble:(Ljava/util/function/ToDoubleFunction;)Ljava/util/Comparator;
+      91: invokeinterface #214,  2          // InterfaceMethod java/util/List.sort:(Ljava/util/Comparator;)V
+      96: aload         10
+      98: invokeinterface #218,  1          // InterfaceMethod java/util/List.isEmpty:()Z
+     103: ifne          633
+     106: aload         10
+     108: iconst_0
+     109: invokeinterface #222,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     114: checkcast     #225                // class net/minecraft/world/entity/Entity
+     117: aload_3
+     118: invokevirtual #227                // Method net/minecraft/world/entity/Entity.distanceToSqr:(Lnet/minecraft/world/entity/Entity;)D
+     121: fload         6
+     123: fload         6
+     125: fmul
+     126: f2d
+     127: dcmpg
+     128: ifge          633
+     131: aload         10
+     133: iconst_0
+     134: invokeinterface #222,  2          // InterfaceMethod java/util/List.get:(I)Ljava/lang/Object;
+     139: checkcast     #225                // class net/minecraft/world/entity/Entity
+     142: astore        11
+     144: ldc           #231                // float 2.5f
+     146: fstore        12
+     148: aload         11
+     150: invokevirtual #232                // Method net/minecraft/world/entity/Entity.getBoundingBox:()Lnet/minecraft/world/phys/AABB;
+     153: invokevirtual #235                // Method net/minecraft/world/phys/AABB.getCenter:()Lnet/minecraft/world/phys/Vec3;
+     156: fload         12
+     158: f2d
+     159: fload         12
+     161: fconst_1
+     162: fadd
+     163: f2d
+     164: fload         12
+     166: f2d
+     167: invokestatic  #238                // Method net/minecraft/world/phys/AABB.ofSize:(Lnet/minecraft/world/phys/Vec3;DDD)Lnet/minecraft/world/phys/AABB;
+     170: aload         7
+     172: fload         12
+     174: fconst_2
+     175: fdiv
+     176: f2d
+     177: invokevirtual #148                // Method net/minecraft/world/phys/Vec3.scale:(D)Lnet/minecraft/world/phys/Vec3;
+     180: invokevirtual #242                // Method net/minecraft/world/phys/AABB.move:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/AABB;
+     183: astore        13
+     185: aload         13
+     187: invokevirtual #235                // Method net/minecraft/world/phys/AABB.getCenter:()Lnet/minecraft/world/phys/Vec3;
+     190: aload         8
+     192: invokevirtual #154                // Method net/minecraft/world/phys/Vec3.add:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+     195: ldc2_w        #245                // double 0.5d
+     198: invokevirtual #148                // Method net/minecraft/world/phys/Vec3.scale:(D)Lnet/minecraft/world/phys/Vec3;
+     201: astore        8
+     203: aload_1
+     204: aload_3
+     205: aload         13
+     207: invokevirtual #247                // Method net/minecraft/world/level/Level.getEntities:(Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/phys/AABB;)Ljava/util/List;
+     210: astore        14
+     212: aload_0
+     213: aload_3
+     214: invokevirtual #250                // Method getDamageSource:(Lnet/minecraft/world/entity/Entity;)Lio/redspace/ironsspellbooks/damage/SpellDamageSource;
+     217: astore        15
+     219: iconst_0
+     220: istore        16
+     222: aload         14
+     224: invokeinterface #254,  1          // InterfaceMethod java/util/List.iterator:()Ljava/util/Iterator;
+     229: astore        17
+     231: aload         17
+     233: invokeinterface #258,  1          // InterfaceMethod java/util/Iterator.hasNext:()Z
+     238: ifeq          553
+     241: aload         17
+     243: invokeinterface #263,  1          // InterfaceMethod java/util/Iterator.next:()Ljava/lang/Object;
+     248: checkcast     #225                // class net/minecraft/world/entity/Entity
+     251: astore        18
+     253: aload         18
+     255: instanceof    #266                // class net/minecraft/world/entity/projectile/Projectile
+     258: ifeq          332
+     261: aload         18
+     263: checkcast     #266                // class net/minecraft/world/entity/projectile/Projectile
+     266: astore        19
+     268: aload         19
+     270: getfield      #268                // Field net/minecraft/world/entity/projectile/Projectile.noPhysics:Z
+     273: ifne          332
+     276: aload         19
+     278: invokevirtual #272                // Method net/minecraft/world/entity/projectile/Projectile.getType:()Lnet/minecraft/world/entity/EntityType;
+     281: getstatic     #276                // Field io/redspace/ironsspellbooks/util/ModTags.CANT_PARRY:Lnet/minecraft/tags/TagKey;
+     284: invokevirtual #282                // Method net/minecraft/world/entity/EntityType.is:(Lnet/minecraft/tags/TagKey;)Z
+     287: ifne          332
+     290: iconst_1
+     291: istore        16
+     293: aload         19
+     295: aload_3
+     296: invokevirtual #288                // Method net/minecraft/world/entity/projectile/Projectile.setOwner:(Lnet/minecraft/world/entity/Entity;)V
+     299: aload         19
+     301: aload         7
+     303: getfield      #292                // Field net/minecraft/world/phys/Vec3.x:D
+     306: aload         7
+     308: getfield      #296                // Field net/minecraft/world/phys/Vec3.y:D
+     311: aload         7
+     313: getfield      #299                // Field net/minecraft/world/phys/Vec3.z:D
+     316: aload         19
+     318: invokevirtual #302                // Method net/minecraft/world/entity/projectile/Projectile.getDeltaMovement:()Lnet/minecraft/world/phys/Vec3;
+     321: invokevirtual #305                // Method net/minecraft/world/phys/Vec3.length:()D
+     324: d2f
+     325: fconst_0
+     326: invokevirtual #309                // Method net/minecraft/world/entity/projectile/Projectile.shoot:(DDDFF)V
+     329: goto          550
+     332: aload         18
+     334: invokevirtual #313                // Method net/minecraft/world/entity/Entity.isAlive:()Z
+     337: ifeq          550
+     340: aload_3
+     341: invokevirtual #316                // Method net/minecraft/world/entity/LivingEntity.isPickable:()Z
+     344: ifeq          550
+     347: aload_1
+     348: aload_3
+     349: invokevirtual #145                // Method net/minecraft/world/entity/LivingEntity.getEyePosition:()Lnet/minecraft/world/phys/Vec3;
+     352: aload         18
+     354: invokevirtual #232                // Method net/minecraft/world/entity/Entity.getBoundingBox:()Lnet/minecraft/world/phys/AABB;
+     357: invokevirtual #235                // Method net/minecraft/world/phys/AABB.getCenter:()Lnet/minecraft/world/phys/Vec3;
+     360: iconst_1
+     361: invokestatic  #319                // Method io/redspace/ironsspellbooks/api/util/Utils.hasLineOfSight:(Lnet/minecraft/world/level/Level;Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/world/phys/Vec3;Z)Z
+     364: ifeq          550
+     367: aload         18
+     369: aload_0
+     370: iload_2
+     371: aload_3
+     372: invokevirtual #323                // Method getDamage:(ILnet/minecraft/world/entity/LivingEntity;)F
+     375: aload         15
+     377: invokestatic  #327                // Method io/redspace/ironsspellbooks/damage/DamageSources.applyDamage:(Lnet/minecraft/world/entity/Entity;FLnet/minecraft/world/damagesource/DamageSource;)Z
+     380: ifeq          550
+     383: aload_1
+     384: getstatic     #333                // Field io/redspace/ironsspellbooks/util/ParticleHelper.ENDER_SPARKS:Lnet/minecraft/core/particles/ParticleOptions;
+     387: aload         18
+     389: invokevirtual #339                // Method net/minecraft/world/entity/Entity.getX:()D
+     392: aload         18
+     394: invokevirtual #342                // Method net/minecraft/world/entity/Entity.getY:()D
+     397: aload         18
+     399: invokevirtual #345                // Method net/minecraft/world/entity/Entity.getBbHeight:()F
+     402: ldc_w         #348                // float 0.5f
+     405: fmul
+     406: f2d
+     407: dadd
+     408: aload         18
+     410: invokevirtual #349                // Method net/minecraft/world/entity/Entity.getZ:()D
+     413: bipush        15
+     415: aload         18
+     417: invokevirtual #352                // Method net/minecraft/world/entity/Entity.getBbWidth:()F
+     420: ldc_w         #348                // float 0.5f
+     423: fmul
+     424: f2d
+     425: aload         18
+     427: invokevirtual #345                // Method net/minecraft/world/entity/Entity.getBbHeight:()F
+     430: ldc_w         #348                // float 0.5f
+     433: fmul
+     434: f2d
+     435: aload         18
+     437: invokevirtual #352                // Method net/minecraft/world/entity/Entity.getBbWidth:()F
+     440: ldc_w         #348                // float 0.5f
+     443: fmul
+     444: f2d
+     445: ldc2_w        #355                // double 0.25d
+     448: iconst_0
+     449: invokestatic  #357                // Method io/redspace/ironsspellbooks/capabilities/magic/MagicManager.spawnParticles:(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDDZ)V
+     452: aload_1
+     453: checkcast     #363                // class net/minecraft/server/level/ServerLevel
+     456: aload         18
+     458: aload         15
+     460: invokestatic  #365                // Method net/minecraft/world/item/enchantment/EnchantmentHelper.doPostAttackEffects:(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/damagesource/DamageSource;)V
+     463: aload         18
+     465: invokevirtual #371                // Method net/minecraft/world/entity/Entity.position:()Lnet/minecraft/world/phys/Vec3;
+     468: aload_3
+     469: invokevirtual #374                // Method net/minecraft/world/entity/LivingEntity.position:()Lnet/minecraft/world/phys/Vec3;
+     472: invokevirtual #179                // Method net/minecraft/world/phys/Vec3.subtract:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+     475: invokevirtual #375                // Method net/minecraft/world/phys/Vec3.normalize:()Lnet/minecraft/world/phys/Vec3;
+     478: dconst_0
+     479: ldc2_w        #245                // double 0.5d
+     482: dconst_0
+     483: invokevirtual #378                // Method net/minecraft/world/phys/Vec3.add:(DDD)Lnet/minecraft/world/phys/Vec3;
+     486: invokevirtual #375                // Method net/minecraft/world/phys/Vec3.normalize:()Lnet/minecraft/world/phys/Vec3;
+     489: astore        20
+     491: aload         20
+     493: getstatic     #381                // Field io/redspace/ironsspellbooks/api/util/Utils.random:Lnet/minecraft/util/RandomSource;
+     496: bipush        70
+     498: bipush        100
+     500: invokeinterface #385,  3          // InterfaceMethod net/minecraft/util/RandomSource.nextIntBetweenInclusive:(II)I
+     505: i2f
+     506: ldc_w         #391                // float 100.0f
+     509: fdiv
+     510: aload         18
+     512: ldc_w         #392                // float 0.2f
+     515: fconst_1
+     516: invokestatic  #393                // Method io/redspace/ironsspellbooks/api/util/Utils.clampedKnockbackResistanceFactor:(Lnet/minecraft/world/entity/Entity;FF)F
+     519: fmul
+     520: ldc_w         #397                // float 0.1f
+     523: fmul
+     524: f2d
+     525: invokevirtual #148                // Method net/minecraft/world/phys/Vec3.scale:(D)Lnet/minecraft/world/phys/Vec3;
+     528: pop
+     529: aload         18
+     531: aload         18
+     533: invokevirtual #398                // Method net/minecraft/world/entity/Entity.getDeltaMovement:()Lnet/minecraft/world/phys/Vec3;
+     536: aload         20
+     538: invokevirtual #154                // Method net/minecraft/world/phys/Vec3.add:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+     541: invokevirtual #399                // Method net/minecraft/world/entity/Entity.setDeltaMovement:(Lnet/minecraft/world/phys/Vec3;)V
+     544: aload         18
+     546: iconst_1
+     547: putfield      #403                // Field net/minecraft/world/entity/Entity.hurtMarked:Z
+     550: goto          231
+     553: iload         16
+     555: ifeq          633
+     558: aload_1
+     559: aconst_null
+     560: aload         11
+     562: invokevirtual #339                // Method net/minecraft/world/entity/Entity.getX:()D
+     565: aload         11
+     567: invokevirtual #342                // Method net/minecraft/world/entity/Entity.getY:()D
+     570: aload         11
+     572: invokevirtual #349                // Method net/minecraft/world/entity/Entity.getZ:()D
+     575: getstatic     #406                // Field io/redspace/ironsspellbooks/registries/SoundRegistry.FIRE_DAGGER_PARRY:Lnet/neoforged/neoforge/registries/DeferredHolder;
+     578: invokevirtual #127                // Method net/neoforged/neoforge/registries/DeferredHolder.get:()Ljava/lang/Object;
+     581: checkcast     #133                // class net/minecraft/sounds/SoundEvent
+     584: aload_3
+     585: invokevirtual #409                // Method net/minecraft/world/entity/LivingEntity.getSoundSource:()Lnet/minecraft/sounds/SoundSource;
+     588: invokevirtual #413                // Method net/minecraft/world/level/Level.playSound:(Lnet/minecraft/world/entity/player/Player;DDDLnet/minecraft/sounds/SoundEvent;Lnet/minecraft/sounds/SoundSource;)V
+     591: aload_1
+     592: getstatic     #333                // Field io/redspace/ironsspellbooks/util/ParticleHelper.ENDER_SPARKS:Lnet/minecraft/core/particles/ParticleOptions;
+     595: aload         11
+     597: invokevirtual #339                // Method net/minecraft/world/entity/Entity.getX:()D
+     600: aload         11
+     602: invokevirtual #342                // Method net/minecraft/world/entity/Entity.getY:()D
+     605: aload         11
+     607: invokevirtual #345                // Method net/minecraft/world/entity/Entity.getBbHeight:()F
+     610: ldc_w         #348                // float 0.5f
+     613: fmul
+     614: f2d
+     615: dadd
+     616: aload         11
+     618: invokevirtual #349                // Method net/minecraft/world/entity/Entity.getZ:()D
+     621: bipush        25
+     623: dconst_0
+     624: dconst_0
+     625: dconst_0
+     626: ldc2_w        #417                // double 0.4d
+     629: iconst_0
+     630: invokestatic  #357                // Method io/redspace/ironsspellbooks/capabilities/magic/MagicManager.spawnParticles:(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDDZ)V
+     633: aload         8
+     635: aload_3
+     636: invokevirtual #145                // Method net/minecraft/world/entity/LivingEntity.getEyePosition:()Lnet/minecraft/world/phys/Vec3;
+     639: invokevirtual #179                // Method net/minecraft/world/phys/Vec3.subtract:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+     642: astore        11
+     644: aload         11
+     646: ldc2_w        #419                // double 0.1666666716337204d
+     649: invokevirtual #148                // Method net/minecraft/world/phys/Vec3.scale:(D)Lnet/minecraft/world/phys/Vec3;
+     652: dconst_0
+     653: ldc2_w        #421                // double 0.1d
+     656: dconst_0
+     657: invokevirtual #378                // Method net/minecraft/world/phys/Vec3.add:(DDD)Lnet/minecraft/world/phys/Vec3;
+     660: astore        12
+     662: aload_3
+     663: aload_3
+     664: invokevirtual #423                // Method net/minecraft/world/entity/LivingEntity.getDeltaMovement:()Lnet/minecraft/world/phys/Vec3;
+     667: ldc2_w        #424                // double 0.2d
+     670: invokevirtual #148                // Method net/minecraft/world/phys/Vec3.scale:(D)Lnet/minecraft/world/phys/Vec3;
+     673: aload         12
+     675: invokevirtual #154                // Method net/minecraft/world/phys/Vec3.add:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+     678: invokevirtual #426                // Method net/minecraft/world/entity/LivingEntity.setDeltaMovement:(Lnet/minecraft/world/phys/Vec3;)V
+     681: aload_3
+     682: iconst_1
+     683: putfield      #427                // Field net/minecraft/world/entity/LivingEntity.hurtMarked:Z
+     686: aload_3
+     687: new           #428                // class net/minecraft/world/effect/MobEffectInstance
+     690: dup
+     691: getstatic     #430                // Field io/redspace/ironsspellbooks/registries/MobEffectRegistry.FALL_DAMAGE_IMMUNITY:Lnet/neoforged/neoforge/registries/DeferredHolder;
+     694: bipush        20
+     696: iconst_0
+     697: iconst_0
+     698: iconst_0
+     699: iconst_1
+     700: invokespecial #435                // Method net/minecraft/world/effect/MobEffectInstance."<init>":(Lnet/minecraft/core/Holder;IIZZZ)V
+     703: invokevirtual #438                // Method net/minecraft/world/entity/LivingEntity.addEffect:(Lnet/minecraft/world/effect/MobEffectInstance;)Z
+     706: pop
+     707: aload         12
+     709: invokevirtual #375                // Method net/minecraft/world/phys/Vec3.normalize:()Lnet/minecraft/world/phys/Vec3;
+     712: astore        7
+     714: new           #149                // class net/minecraft/world/phys/Vec3
+     717: dup
+     718: dconst_0
+     719: dconst_1
+     720: dconst_0
+     721: invokespecial #442                // Method net/minecraft/world/phys/Vec3."<init>":(DDD)V
+     724: astore        13
+     726: aload         7
+     728: aload         13
+     730: invokevirtual #445                // Method net/minecraft/world/phys/Vec3.dot:(Lnet/minecraft/world/phys/Vec3;)D
+     733: ldc2_w        #449                // double 0.999d
+     736: dcmpl
+     737: ifle          752
+     740: new           #149                // class net/minecraft/world/phys/Vec3
+     743: dup
+     744: dconst_1
+     745: dconst_0
+     746: dconst_0
+     747: invokespecial #442                // Method net/minecraft/world/phys/Vec3."<init>":(DDD)V
+     750: astore        13
+     752: aload         13
+     754: aload         7
+     756: invokevirtual #451                // Method net/minecraft/world/phys/Vec3.cross:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+     759: astore        14
+     761: aload         8
+     763: aload         7
+     765: ldc2_w        #454                // double 3.0d
+     768: invokevirtual #148                // Method net/minecraft/world/phys/Vec3.scale:(D)Lnet/minecraft/world/phys/Vec3;
+     771: invokevirtual #179                // Method net/minecraft/world/phys/Vec3.subtract:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+     774: aload         14
+     776: ldc2_w        #456                // double -0.3d
+     779: invokevirtual #148                // Method net/minecraft/world/phys/Vec3.scale:(D)Lnet/minecraft/world/phys/Vec3;
+     782: invokevirtual #154                // Method net/minecraft/world/phys/Vec3.add:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+     785: astore        15
+     787: aload_1
+     788: new           #458                // class io/redspace/ironsspellbooks/particle/EnderSlashParticleOptions
+     791: dup
+     792: aload         7
+     794: getfield      #292                // Field net/minecraft/world/phys/Vec3.x:D
+     797: d2f
+     798: aload         7
+     800: getfield      #296                // Field net/minecraft/world/phys/Vec3.y:D
+     803: d2f
+     804: aload         7
+     806: getfield      #299                // Field net/minecraft/world/phys/Vec3.z:D
+     809: d2f
+     810: aload         14
+     812: getfield      #292                // Field net/minecraft/world/phys/Vec3.x:D
+     815: d2f
+     816: aload         14
+     818: getfield      #296                // Field net/minecraft/world/phys/Vec3.y:D
+     821: d2f
+     822: aload         14
+     824: getfield      #299                // Field net/minecraft/world/phys/Vec3.z:D
+     827: d2f
+     828: fconst_1
+     829: invokespecial #460                // Method io/redspace/ironsspellbooks/particle/EnderSlashParticleOptions."<init>":(FFFFFFF)V
+     832: aload         15
+     834: getfield      #292                // Field net/minecraft/world/phys/Vec3.x:D
+     837: aload         15
+     839: getfield      #296                // Field net/minecraft/world/phys/Vec3.y:D
+     842: ldc2_w        #463                // double 0.3d
+     845: dadd
+     846: aload         15
+     848: getfield      #299                // Field net/minecraft/world/phys/Vec3.z:D
+     851: iconst_1
+     852: dconst_0
+     853: dconst_0
+     854: dconst_0
+     855: dconst_0
+     856: iconst_1
+     857: invokestatic  #357                // Method io/redspace/ironsspellbooks/capabilities/magic/MagicManager.spawnParticles:(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDDZ)V
+     860: bipush        15
+     862: istore        16
+     864: aload         11
+     866: invokevirtual #305                // Method net/minecraft/world/phys/Vec3.length:()D
+     869: ldc2_w        #465                // double 12.0d
+     872: ddiv
+     873: ldc2_w        #467                // double 0.75d
+     876: dmul
+     877: dstore        17
+     879: iconst_0
+     880: istore        19
+     882: iload         19
+     884: iload         16
+     886: if_icmpge     976
+     889: aload_3
+     890: invokevirtual #469                // Method net/minecraft/world/entity/LivingEntity.getBoundingBox:()Lnet/minecraft/world/phys/AABB;
+     893: invokevirtual #235                // Method net/minecraft/world/phys/AABB.getCenter:()Lnet/minecraft/world/phys/Vec3;
+     896: fconst_1
+     897: aload_3
+     898: invokevirtual #470                // Method net/minecraft/world/entity/LivingEntity.getBbWidth:()F
+     901: fadd
+     902: f2d
+     903: invokestatic  #471                // Method io/redspace/ironsspellbooks/api/util/Utils.getRandomVec3:(D)Lnet/minecraft/world/phys/Vec3;
+     906: invokevirtual #154                // Method net/minecraft/world/phys/Vec3.add:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+     909: astore        20
+     911: aload         20
+     913: aload         11
+     915: invokevirtual #154                // Method net/minecraft/world/phys/Vec3.add:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+     918: astore        21
+     920: aload_1
+     921: new           #474                // class io/redspace/ironsspellbooks/particle/TraceParticleOptions
+     924: dup
+     925: aload         21
+     927: invokestatic  #476                // Method io/redspace/ironsspellbooks/api/util/Utils.v3f:(Lnet/minecraft/world/phys/Vec3;)Lorg/joml/Vector3f;
+     930: new           #480                // class org/joml/Vector3f
+     933: dup
+     934: fconst_1
+     935: ldc_w         #482                // float 0.333f
+     938: fconst_1
+     939: invokespecial #483                // Method org/joml/Vector3f."<init>":(FFF)V
+     942: invokespecial #486                // Method io/redspace/ironsspellbooks/particle/TraceParticleOptions."<init>":(Lorg/joml/Vector3f;Lorg/joml/Vector3f;)V
+     945: aload         20
+     947: getfield      #292                // Field net/minecraft/world/phys/Vec3.x:D
+     950: aload         20
+     952: getfield      #296                // Field net/minecraft/world/phys/Vec3.y:D
+     955: aload         20
+     957: getfield      #299                // Field net/minecraft/world/phys/Vec3.z:D
+     960: iconst_1
+     961: dconst_0
+     962: dconst_0
+     963: dconst_0
+     964: dload         17
+     966: iconst_0
+     967: invokestatic  #357                // Method io/redspace/ironsspellbooks/capabilities/magic/MagicManager.spawnParticles:(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDDZ)V
+     970: iinc          19, 1
+     973: goto          882
+     976: aload_0
+     977: aload_1
+     978: iload_2
+     979: aload_3
+     980: aload         4
+     982: aload         5
+     984: invokespecial #489                // Method io/redspace/ironsspellbooks/api/spells/AbstractSpell.onCast:(Lnet/minecraft/world/level/Level;ILnet/minecraft/world/entity/LivingEntity;Lio/redspace/ironsspellbooks/api/spells/CastSource;Lio/redspace/ironsspellbooks/api/magic/MagicData;)V
+     987: return
+
+  private float getDamage(int, net.minecraft.world.entity.LivingEntity);
+    Code:
+       0: aload_0
+       1: iload_1
+       2: aload_2
+       3: invokevirtual #493                // Method getSpellPower:(ILnet/minecraft/world/entity/Entity;)F
+       6: aload_2
+       7: invokestatic  #497                // Method io/redspace/ironsspellbooks/api/util/Utils.getWeaponDamage:(Lnet/minecraft/world/entity/LivingEntity;)F
+      10: fadd
+      11: freturn
+
+  private java.lang.String getDamageText(int, net.minecraft.world.entity.LivingEntity);
+    Code:
+       0: aload_2
+       1: ifnull        64
+       4: aload_2
+       5: invokestatic  #497                // Method io/redspace/ironsspellbooks/api/util/Utils.getWeaponDamage:(Lnet/minecraft/world/entity/LivingEntity;)F
+       8: fstore_3
+       9: ldc_w         #501                // String
+      12: astore        4
+      14: fload_3
+      15: fconst_0
+      16: fcmpl
+      17: ifle          41
+      20: ldc_w         #503                // String  (+%s)
+      23: iconst_1
+      24: anewarray     #3                  // class java/lang/Object
+      27: dup
+      28: iconst_0
+      29: fload_3
+      30: f2d
+      31: iconst_1
+      32: invokestatic  #505                // Method io/redspace/ironsspellbooks/api/util/Utils.stringTruncation:(DI)Ljava/lang/String;
+      35: aastore
+      36: invokestatic  #509                // Method java/lang/String.format:(Ljava/lang/String;[Ljava/lang/Object;)Ljava/lang/String;
+      39: astore        4
+      41: aload_0
+      42: iload_1
+      43: aload_2
+      44: invokevirtual #323                // Method getDamage:(ILnet/minecraft/world/entity/LivingEntity;)F
+      47: f2d
+      48: iconst_1
+      49: invokestatic  #505                // Method io/redspace/ironsspellbooks/api/util/Utils.stringTruncation:(DI)Ljava/lang/String;
+      52: astore        5
+      54: aload         5
+      56: aload         4
+      58: invokedynamic #515,  0            // InvokeDynamic #2:makeConcatWithConstants:(Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+      63: areturn
+      64: aload_0
+      65: iload_1
+      66: aload_2
+      67: invokevirtual #493                // Method getSpellPower:(ILnet/minecraft/world/entity/Entity;)F
+      70: invokedynamic #519,  0            // InvokeDynamic #3:makeConcatWithConstants:(F)Ljava/lang/String;
+      75: areturn
+
+  public io.redspace.ironsspellbooks.api.util.AnimationHolder getCastStartAnimation();
+    Code:
+       0: getstatic     #522                // Field io/redspace/ironsspellbooks/api/spells/SpellAnimations.ONE_HANDED_VERTICAL_UPSWING_ANIMATION:Lio/redspace/ironsspellbooks/api/util/AnimationHolder;
+       3: areturn
+
+  private static double lambda$onCast$1(net.minecraft.world.entity.LivingEntity, net.minecraft.world.entity.Entity);
+    Code:
+       0: aload_1
+       1: aload_0
+       2: invokevirtual #227                // Method net/minecraft/world/entity/Entity.distanceToSqr:(Lnet/minecraft/world/entity/Entity;)D
+       5: dreturn
+
+  private static boolean lambda$onCast$0(net.minecraft.world.entity.LivingEntity, net.minecraft.world.entity.Entity);
+    Code:
+       0: aload_1
+       1: invokevirtual #528                // Method net/minecraft/world/entity/Entity.isSpectator:()Z
+       4: ifne          59
+       7: aload_1
+       8: instanceof    #112                // class net/minecraft/world/entity/LivingEntity
+      11: ifne          21
+      14: aload_1
+      15: instanceof    #266                // class net/minecraft/world/entity/projectile/Projectile
+      18: ifeq          59
+      21: aload_1
+      22: invokevirtual #232                // Method net/minecraft/world/entity/Entity.getBoundingBox:()Lnet/minecraft/world/phys/AABB;
+      25: invokevirtual #235                // Method net/minecraft/world/phys/AABB.getCenter:()Lnet/minecraft/world/phys/Vec3;
+      28: aload_0
+      29: invokevirtual #469                // Method net/minecraft/world/entity/LivingEntity.getBoundingBox:()Lnet/minecraft/world/phys/AABB;
+      32: invokevirtual #235                // Method net/minecraft/world/phys/AABB.getCenter:()Lnet/minecraft/world/phys/Vec3;
+      35: invokevirtual #179                // Method net/minecraft/world/phys/Vec3.subtract:(Lnet/minecraft/world/phys/Vec3;)Lnet/minecraft/world/phys/Vec3;
+      38: invokevirtual #375                // Method net/minecraft/world/phys/Vec3.normalize:()Lnet/minecraft/world/phys/Vec3;
+      41: aload_0
+      42: invokevirtual #141                // Method net/minecraft/world/entity/LivingEntity.getForward:()Lnet/minecraft/world/phys/Vec3;
+      45: invokevirtual #445                // Method net/minecraft/world/phys/Vec3.dot:(Lnet/minecraft/world/phys/Vec3;)D
+      48: ldc2_w        #531                // double 0.85d
+      51: dcmpl
+      52: iflt          59
+      55: iconst_1
+      56: goto          60
+      59: iconst_0
+      60: ireturn
+}

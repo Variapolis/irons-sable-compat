@@ -6,7 +6,7 @@
         "artifact": "sable-companion-common-1.21.1"
       },
       "version": {
-        "range": "[1.0,)",
+        "range": "[1.6.0,1.6.1)",
         "artifactVersion": "1.6.0"
       },
       "path": "META-INF/jarjar/sable-companion-common-1.21.1-1.6.0.jar",
