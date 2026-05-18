@@ -12,7 +12,8 @@
     "PortalFrameBlockEntityMixin",
     "RaycastBuilderMixin",
     "MagicManagerMixin",
-    "ClientMagicDataMixin"
+    "ClientMagicDataMixin",
+    "TeleportSpellMixin"
   ],
   "injectors": {
     "defaultRequire": 1
