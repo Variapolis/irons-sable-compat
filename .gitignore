@@ -21,3 +21,8 @@ out/
 # OS generated files
 .DS_Store
 Thumbs.db
+
+# Local run environment and generated workspaces
+run/
+scratch_decompile/
+.eclipse/
