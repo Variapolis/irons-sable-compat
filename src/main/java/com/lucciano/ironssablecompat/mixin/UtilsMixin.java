@@ -108,17 +108,26 @@ public class UtilsMixin {
     )
     private static void projectGetTargetBlock(Level level, LivingEntity entity, ClipContext.Fluid clipContext, double reach, CallbackInfoReturnable<BlockHitResult> cir) {
         BlockHitResult original = cir.getReturnValue();
-        Vec3 start = entity.getEyePosition();
+        BlockPos blockPos = original.getBlockPos();
         Vec3 hitLocation = original.getLocation();
-        Vec3 adjusted = projectLocationToStartSpace(level, start, hitLocation);
 
-        if (adjusted != hitLocation) {
-            cir.setReturnValue(new BlockHitResult(
-                adjusted,
-                original.getDirection(),
-                original.getBlockPos(), // Keep original sub-level block position intact
-                original.isInside()
-            ));
+        // Check if blockPos lives in a sublevel
+        Vec3 blockVec = Vec3.atCenterOf(blockPos);
+        Vec3 projectedBlockVec = SableCompanion.INSTANCE.projectOutOfSubLevel(level, blockVec);
+
+        if (projectedBlockVec.distanceToSqr(blockVec) > 0.01) {
+            // BlockPos is in sublevel space — convert Vec3 to the SAME sublevel space
+            // so Iron's code (solveTeleportDestination, TouchDig, etc.) gets consistent inputs
+            SubLevelAccess subLevel = SableCompanion.INSTANCE.getContaining(level, projectedBlockVec);
+            if (subLevel != null) {
+                Vec3 sublevelVec = subLevel.logicalPose().transformPositionInverse(hitLocation);
+                cir.setReturnValue(new BlockHitResult(
+                    sublevelVec,
+                    original.getDirection(),
+                    blockPos,
+                    original.isInside()
+                ));
+            }
         }
     }
 }
