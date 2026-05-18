@@ -59,6 +59,26 @@ public class UtilsMixin {
         args.set(4, dest.z);
     }
 
+    private static Vec3 projectLocationToStartSpace(Level level, Vec3 start, Vec3 hitLocation) {
+        SubLevelAccess startSubLevel = SableCompanion.INSTANCE.getContaining(level, start);
+        SubLevelAccess hitSubLevel = SableCompanion.INSTANCE.getContaining(level, hitLocation);
+
+        if (startSubLevel == hitSubLevel) {
+            return hitLocation;
+        }
+
+        // First project the hit to real-world coordinates
+        Vec3 realWorldHit = SableCompanion.INSTANCE.projectOutOfSubLevel(level, hitLocation);
+
+        if (startSubLevel != null) {
+            // Caster/start is in a sub-level, project realWorldHit into the caster's sub-level space
+            return startSubLevel.logicalPose().transformPositionInverse(realWorldHit);
+        } else {
+            // Caster/start is in the real world, use the real world coordinates
+            return realWorldHit;
+        }
+    }
+
     @Inject(
         method = "raycastForBlock",
         remap = false,
@@ -68,13 +88,13 @@ public class UtilsMixin {
     private static void projectRaycastForBlock(Level level, Vec3 start, Vec3 end, ClipContext.Fluid clipContext, CallbackInfoReturnable<BlockHitResult> cir) {
         BlockHitResult original = cir.getReturnValue();
         Vec3 hitLocation = original.getLocation();
-        Vec3 projected = SableCompanion.INSTANCE.projectOutOfSubLevel(level, hitLocation);
+        Vec3 adjusted = projectLocationToStartSpace(level, start, hitLocation);
 
-        if (projected.x != hitLocation.x || projected.y != hitLocation.y || projected.z != hitLocation.z) {
+        if (adjusted != hitLocation) {
             cir.setReturnValue(new BlockHitResult(
-                projected,
+                adjusted,
                 original.getDirection(),
-                BlockPos.containing(projected),
+                original.getBlockPos(), // Keep original sub-level block position intact
                 original.isInside()
             ));
         }
@@ -88,14 +108,15 @@ public class UtilsMixin {
     )
     private static void projectGetTargetBlock(Level level, LivingEntity entity, ClipContext.Fluid clipContext, double reach, CallbackInfoReturnable<BlockHitResult> cir) {
         BlockHitResult original = cir.getReturnValue();
+        Vec3 start = entity.getEyePosition();
         Vec3 hitLocation = original.getLocation();
-        Vec3 projected = SableCompanion.INSTANCE.projectOutOfSubLevel(level, hitLocation);
+        Vec3 adjusted = projectLocationToStartSpace(level, start, hitLocation);
 
-        if (projected.x != hitLocation.x || projected.y != hitLocation.y || projected.z != hitLocation.z) {
+        if (adjusted != hitLocation) {
             cir.setReturnValue(new BlockHitResult(
-                projected,
+                adjusted,
                 original.getDirection(),
-                BlockPos.containing(projected),
+                original.getBlockPos(), // Keep original sub-level block position intact
                 original.isInside()
             ));
         }
