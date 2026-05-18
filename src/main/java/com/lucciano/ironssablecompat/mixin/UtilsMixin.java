@@ -58,7 +58,15 @@ public class UtilsMixin {
         Vec3 realWorldDest = SableCompanion.INSTANCE.projectOutOfSubLevel(entity.level(), dest);
 
         // Case 2: destination is ON a ship - project INTO it
-        SubLevelAccess subLevel = SableCompanion.INSTANCE.getContaining(entity.level(), realWorldDest);
+        SubLevelAccess subLevel = null;
+        dev.ryanhcode.sable.companion.math.BoundingBox3d bounds = new dev.ryanhcode.sable.companion.math.BoundingBox3d(
+            realWorldDest.x - 0.01, realWorldDest.y - 0.01, realWorldDest.z - 0.01,
+            realWorldDest.x + 0.01, realWorldDest.y + 0.01, realWorldDest.z + 0.01
+        );
+        for (SubLevelAccess sl : SableCompanion.INSTANCE.getAllIntersecting(entity.level(), bounds)) {
+            subLevel = sl;
+            break;
+        }
         System.out.println("[IronsSableCompat] subLevel=" + subLevel);
 
         if (subLevel != null) {

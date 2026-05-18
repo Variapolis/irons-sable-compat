@@ -12,7 +12,8 @@
     "PortalFrameBlockEntityMixin",
     "RaycastBuilderMixin",
     "ShadowSlashMixin",
-    "MagicManagerMixin"
+    "MagicManagerMixin",
+    "ClientMagicDataMixin"
   ],
   "injectors": {
     "defaultRequire": 1

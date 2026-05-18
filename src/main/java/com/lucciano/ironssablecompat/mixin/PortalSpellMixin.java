@@ -31,10 +31,14 @@ public class PortalSpellMixin {
             // It's already an extreme coordinate on a ship, leave it alone!
             dest = spawnPos;
         } else {
-            SubLevelAccess subLevel = SableCompanion.INSTANCE.getContaining(level, spawnPos);
-            if (subLevel == null) {
-                // The portal spawns slightly above the floor. If it's just outside the bounding box, check slightly below!
-                subLevel = SableCompanion.INSTANCE.getContaining(level, spawnPos.add(0, -0.5, 0));
+            SubLevelAccess subLevel = null;
+            dev.ryanhcode.sable.companion.math.BoundingBox3d bounds = new dev.ryanhcode.sable.companion.math.BoundingBox3d(
+                spawnPos.x - 0.1, spawnPos.y - 0.6, spawnPos.z - 0.1,
+                spawnPos.x + 0.1, spawnPos.y + 0.1, spawnPos.z + 0.1
+            );
+            for (SubLevelAccess sl : SableCompanion.INSTANCE.getAllIntersecting(level, bounds)) {
+                subLevel = sl;
+                break;
             }
             if (subLevel != null) {
                 // If it's real world but inside a ship's bounds, spawn it inside the ship
