@@ -4,9 +4,7 @@
 > compatibility patch until Iron's Spells 'n Spellbooks or Sable officially
 > integrates Sable Companion support.
 
-Fixes teleport, Frost Step, Blood Step, Dig, Portal (entity + frame), and
-raycast-based spells from Iron's Spells 'n Spellbooks when used on or near
-Create Aeronautics / Sable physics ships (NeoForge 1.21.1).
+Fixes all spells exept portal frames, they don't crash but disconnect if the physics are toggled, and only work to get in the contraptions not off them.
 
 ## Tested Versions
 
