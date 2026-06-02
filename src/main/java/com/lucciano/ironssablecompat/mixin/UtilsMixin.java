@@ -21,15 +21,7 @@ import net.minecraft.world.entity.LivingEntity;
 @Mixin(value = Utils.class, remap = false)
 public class UtilsMixin {
 
-    @ModifyArgs(
-        method = "handleSpellTeleport",
-        remap = false,
-        at = @At(
-            value = "INVOKE",
-            target = "Lio/redspace/ironsspellbooks/api/events/SpellTeleportEvent;<init>(Lio/redspace/ironsspellbooks/api/spells/AbstractSpell;Lnet/minecraft/world/entity/Entity;DDD)V",
-            remap = false
-        )
-    )
+    @ModifyArgs(method = "handleSpellTeleport", remap = false, at = @At(value = "INVOKE", target = "Lio/redspace/ironsspellbooks/api/events/SpellTeleportEvent;<init>(Lio/redspace/ironsspellbooks/api/spells/AbstractSpell;Lnet/minecraft/world/entity/Entity;DDD)V", remap = false))
     private static void fixTeleportDestination(Args args) {
         Entity entity = args.get(1);
         double x = args.get(2);
@@ -71,7 +63,8 @@ public class UtilsMixin {
         Vec3 realWorldHit = SableCompanion.INSTANCE.projectOutOfSubLevel(level, hitLocation);
 
         if (startSubLevel != null) {
-            // Caster/start is in a sub-level, project realWorldHit into the caster's sub-level space
+            // Caster/start is in a sub-level, project realWorldHit into the caster's
+            // sub-level space
             return startSubLevel.logicalPose().transformPositionInverse(realWorldHit);
         } else {
             // Caster/start is in the real world, use the real world coordinates
@@ -79,34 +72,25 @@ public class UtilsMixin {
         }
     }
 
-    @Inject(
-        method = "raycastForBlock",
-        remap = false,
-        at = @At("RETURN"),
-        cancellable = true
-    )
-    private static void projectRaycastForBlock(Level level, Vec3 start, Vec3 end, ClipContext.Fluid clipContext, CallbackInfoReturnable<BlockHitResult> cir) {
+    @Inject(method = "raycastForBlock", remap = false, at = @At("RETURN"), cancellable = true)
+    private static void projectRaycastForBlock(Level level, Vec3 start, Vec3 end, ClipContext.Fluid clipContext,
+            CallbackInfoReturnable<BlockHitResult> cir) {
         BlockHitResult original = cir.getReturnValue();
         Vec3 hitLocation = original.getLocation();
         Vec3 adjusted = projectLocationToStartSpace(level, start, hitLocation);
 
         if (adjusted != hitLocation) {
             cir.setReturnValue(new BlockHitResult(
-                adjusted,
-                original.getDirection(),
-                original.getBlockPos(), // Keep original sub-level block position intact
-                original.isInside()
-            ));
+                    adjusted,
+                    original.getDirection(),
+                    original.getBlockPos(), // Keep original sub-level block position intact
+                    original.isInside()));
         }
     }
 
-    @Inject(
-        method = "getTargetBlock",
-        remap = false,
-        at = @At("RETURN"),
-        cancellable = true
-    )
-    private static void projectGetTargetBlock(Level level, LivingEntity entity, ClipContext.Fluid clipContext, double reach, CallbackInfoReturnable<BlockHitResult> cir) {
+    @Inject(method = "getTargetBlock", remap = false, at = @At("RETURN"), cancellable = true)
+    private static void projectGetTargetBlock(Level level, LivingEntity entity, ClipContext.Fluid clipContext,
+            double reach, CallbackInfoReturnable<BlockHitResult> cir) {
         BlockHitResult original = cir.getReturnValue();
         BlockPos blockPos = original.getBlockPos();
         Vec3 hitLocation = original.getLocation();
@@ -117,16 +101,16 @@ public class UtilsMixin {
 
         if (projectedBlockVec.distanceToSqr(blockVec) > 0.01) {
             // BlockPos is in sublevel space — convert Vec3 to the SAME sublevel space
-            // so Iron's code (solveTeleportDestination, TouchDig, etc.) gets consistent inputs
+            // so Iron's code (solveTeleportDestination, TouchDig, etc.) gets consistent
+            // inputs
             SubLevelAccess subLevel = SableCompanion.INSTANCE.getContaining(level, projectedBlockVec);
             if (subLevel != null) {
                 Vec3 sublevelVec = subLevel.logicalPose().transformPositionInverse(hitLocation);
                 cir.setReturnValue(new BlockHitResult(
-                    sublevelVec,
-                    original.getDirection(),
-                    blockPos,
-                    original.isInside()
-                ));
+                        sublevelVec,
+                        original.getDirection(),
+                        blockPos,
+                        original.isInside()));
             }
         }
     }
