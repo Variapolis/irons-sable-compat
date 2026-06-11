@@ -24,50 +24,12 @@ public final class SableUnloadedSubLevelCompat {
 
     private SableUnloadedSubLevelCompat() {}
 
-    public static Vec3 resolveDestination(Level level, Vec3 localStoredPos) {
-        SubLevel loaded = Sable.HELPER.getContaining(level, localStoredPos);
+    public static Vec3 resolveDestination(Level level, Vec3 storagePos) {
+        SubLevel loaded = Sable.HELPER.getContaining(level, storagePos);
         if (loaded != null) {
-            return loaded.logicalPose().transformPosition(toStorage(localStoredPos));
+            return Sable.HELPER.projectOutOfSubLevel(level, storagePos);
         }
-
-        if (level instanceof ServerLevel serverLevel) {
-            SubLevelData stored = findStoredSubLevelData(serverLevel, BlockPos.containing(localStoredPos));
-            if (stored != null) {
-                return transformFromStoredPose(stored, toStorage(localStoredPos));
-            }
-        }
-
-        return localStoredPos;
-    }
-
-    public static Vec3 getVisibleTeleportPos(Level level, Vec3 waystoneTargetPos) {
-        SubLevel targetSubLevel = Sable.HELPER.getContaining(level, waystoneTargetPos);
-        if (targetSubLevel == null) {
-            SubLevelData storedTarget = level instanceof ServerLevel serverLevel
-                    ? findStoredSubLevelData(serverLevel, BlockPos.containing(waystoneTargetPos))
-                    : null;
-            if (storedTarget == null) {
-                return waystoneTargetPos;
-            }
-
-            return transformFromStoredPose(storedTarget, toStorage(waystoneTargetPos));
-        }
-
-        return targetSubLevel.logicalPose().transformPosition(toStorage(waystoneTargetPos));
-    }
-
-
-    // -------------------------------------------------------------------------
-    // Internal helpers
-    // -------------------------------------------------------------------------
-
-    private static Vec3 toStorage(Vec3 pos) {
-        return new Vec3(pos.x, pos.y - 0.5, pos.z);
-    }
-
-    private static Vec3 transformFromStoredPose(SubLevelData data, Vec3 localPos) {
-        Vector3d out = data.pose().transformPosition(new Vector3d(localPos.x, localPos.y, localPos.z));
-        return new Vec3(out.x, out.y, out.z);
+        return storagePos;
     }
 
     private static SubLevelData findStoredSubLevelData(ServerLevel level, BlockPos targetPos) {
