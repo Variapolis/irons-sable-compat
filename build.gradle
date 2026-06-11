@@ -46,6 +46,9 @@ repositories {
 }
 
 dependencies {
+
+    implementation files("libs/sable-neoforge-1.21.1-1.2.2.jar")
+
     // Sable Companion - JiJ'd so it ships inside your mod
     jarJar(api("dev.ryanhcode.sable-companion:sable-companion-common-1.21.1:[1.6.0,1.6.1)")) {
         version { prefer project.sable_companion_version }

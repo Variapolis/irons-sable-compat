@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
+import com.lucciano.ironssablecompat.helpers.SableUnloadedSubLevelCompat;
 import java.util.UUID;
 
 @Mixin(PortalFrameBlockEntity.class)
@@ -27,12 +27,13 @@ public class PortalFrameBlockEntityMixin {
                 boolean isPrimary = uuid.equals(portalData.portalEntityId1);
                 PortalPos currentPos = isPrimary ? portalData.globalPos1 : portalData.globalPos2;
                 
-                // getPortalLocation returns the BlockPos in the sub-level (extreme coordinate)
-                // Add 0.1 to Y so when the player is teleported, they don't clip into the moving floor!
-                Vec3 actualLoc = entity.getPortalLocation().add(0, 0.1, 0);
+                Vec3 extremeLoc = entity.getPortalLocation().add(0, 0.1, 0);
+                Vec3 worldLoc = SableUnloadedSubLevelCompat.getVisibleTeleportPos(level, extremeLoc);
                 
-                if (currentPos == null || currentPos.pos().distanceToSqr(actualLoc) > 0.01) {
-                    PortalPos newPos = PortalPos.of(level.dimension(), actualLoc, currentPos != null ? currentPos.rotation() : 0f);
+                if (currentPos == null || currentPos.pos().distanceToSqr(worldLoc) > 0.01) {
+                    float rotation = currentPos != null ? currentPos.rotation() : 0f;
+                    PortalPos newPos = PortalPos.of(level.dimension(), worldLoc, rotation);      
+                    
                     if (isPrimary) {
                         portalData.globalPos1 = newPos;
                     } else {

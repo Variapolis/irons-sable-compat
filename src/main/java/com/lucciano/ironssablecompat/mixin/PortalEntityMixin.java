@@ -1,7 +1,5 @@
 package com.lucciano.ironssablecompat.mixin;
 
-import dev.ryanhcode.sable.companion.SableCompanion;
-import dev.ryanhcode.sable.companion.SubLevelAccess;
 import io.redspace.ironsspellbooks.capabilities.magic.PortalManager;
 import io.redspace.ironsspellbooks.entity.spells.portal.PortalData;
 import io.redspace.ironsspellbooks.entity.spells.portal.PortalEntity;
@@ -13,10 +11,10 @@ import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+import com.lucciano.ironssablecompat.helpers.SableUnloadedSubLevelCompat;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -29,6 +27,8 @@ public class PortalEntityMixin {
         PortalEntity thisPortal = (PortalEntity) (Object) this;
         PortalData portalData = PortalManager.INSTANCE.getPortalData(thisPortal);
         
+        Vec3 dest = originalDest;
+        
         if (portalData != null && targetLevel instanceof ServerLevel) {
             ServerLevel serverLevel = (ServerLevel) targetLevel;
             UUID otherId = portalData.getConnectedPortalUUID(thisPortal.getUUID());
@@ -39,27 +39,13 @@ public class PortalEntityMixin {
                     if (stalePosOpt.isPresent()) {
                         Vec3 stalePos = stalePosOpt.get().pos();
                         Vec3 offset = originalDest.subtract(stalePos);
-                        // otherPortal.position() is its actual current coordinate (extreme or real-world).
-                        return otherPortal.position().add(offset);
+                        dest = otherPortal.position().add(offset);
                     }
                 }
             }
         }
         
-        // Fallback to original logic if we can't find the other portal entity (e.g., chunk unloaded or block frame)
-        Vec3 projected = SableCompanion.INSTANCE.projectOutOfSubLevel(targetLevel, originalDest);
-        if (projected.distanceToSqr(originalDest) > 0.01) {
-            // If the projected coordinate is different, it means originalDest is already an extreme coordinate.
-            // We should just use it directly!
-            return originalDest;
-        }
-        
-        SubLevelAccess subLevel = SableCompanion.INSTANCE.getContaining(targetLevel, originalDest);
-        if (subLevel != null) {
-            return subLevel.logicalPose().transformPositionInverse(originalDest);
-        }
-        
-        return originalDest;
+        return SableUnloadedSubLevelCompat.getVisibleTeleportPos(targetLevel, dest);
     }
 
     @Redirect(
