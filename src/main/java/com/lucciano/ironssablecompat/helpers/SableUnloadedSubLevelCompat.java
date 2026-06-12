@@ -1,9 +1,14 @@
 package com.lucciano.ironssablecompat.helpers;
 
+import com.lucciano.ironssablecompat.mixin.accessor.SubLevelContainerAccess;
 import com.lucciano.ironssablecompat.mixin.accessor.SubLevelHoldingChunkAccessor;
 import com.lucciano.ironssablecompat.mixin.accessor.SubLevelHoldingChunkMapAccessor;
+import com.mojang.logging.LogUtils;
 import dev.ryanhcode.sable.Sable;
 import dev.ryanhcode.sable.api.sublevel.ServerSubLevelContainer;
+import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
+import dev.ryanhcode.sable.companion.math.Pose3d;
+import dev.ryanhcode.sable.companion.math.Pose3dc;
 import dev.ryanhcode.sable.sublevel.SubLevel;
 import dev.ryanhcode.sable.sublevel.storage.HoldingSubLevel;
 import dev.ryanhcode.sable.sublevel.storage.holding.SavedSubLevelPointer;
@@ -13,14 +18,17 @@ import dev.ryanhcode.sable.sublevel.storage.serialization.SubLevelData;
 import dev.ryanhcode.sable.sublevel.storage.serialization.SubLevelStorage;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
+import org.slf4j.Logger;
 
 import java.io.File;
 
 public final class SableUnloadedSubLevelCompat {
+    private static final Logger LOGGER = LogUtils.getLogger();
 
     private SableUnloadedSubLevelCompat() {}
 
@@ -30,10 +38,22 @@ public final class SableUnloadedSubLevelCompat {
             return Sable.HELPER.projectOutOfSubLevel(level, storagePos);
         }
 
+        // Fall back to last-known pose from the container (for held/unloaded sub-levels)
+        Pose3dc lastPose = lastKnownContainingPose(level, storagePos.x, storagePos.z);
+        if (lastPose != null) {
+            Vector3d world = lastPose.transformPosition(new Vector3d(storagePos.x, storagePos.y, storagePos.z));
+            LOGGER.debug("resolveDestination: used lastKnownPose, extreme={} -> world={}", storagePos, world);
+            return new Vec3(world.x, world.y, world.z);
+        }
+
         if (level instanceof ServerLevel serverLevel) {
             SubLevel byLocalBounds = findByLocalBounds(serverLevel, storagePos);
             if (byLocalBounds != null) {
-                return Sable.HELPER.projectOutOfSubLevel(level, storagePos);
+                Vector3d world = byLocalBounds.logicalPose().transformPosition(
+                    new Vector3d(storagePos.x, storagePos.y, storagePos.z));
+                LOGGER.debug("resolveDestination: findByLocalBounds found sub-level {}, extreme={} -> world={}",
+                    byLocalBounds.getName(), storagePos, world);
+                return new Vec3(world.x, world.y, world.z);
             }
 
             SubLevelData storedData = findStoredSubLevelData(serverLevel, BlockPos.containing(storagePos));
@@ -42,19 +62,36 @@ public final class SableUnloadedSubLevelCompat {
             }
         }
 
+        LOGGER.debug("resolveDestination: fallback to raw extreme={}", storagePos);
         return storagePos;
+    }
+
+    private static Pose3dc lastKnownContainingPose(Level level, double blockX, double blockZ) {
+        SubLevelContainer container = SubLevelContainer.getContainer(level);
+        if (container == null) return null;
+
+        int chunkX = Mth.floor(blockX) >> 4;
+        int chunkZ = Mth.floor(blockZ) >> 4;
+        if (!container.inBounds(chunkX, chunkZ)) return null;
+
+        int plotX = (chunkX >> container.getLogPlotSize()) - container.getOrigin().x;
+        int plotZ = (chunkZ >> container.getLogPlotSize()) - container.getOrigin().y;
+
+        int index = container.getIndex(plotX, plotZ);
+        Pose3d[] poses = ((SubLevelContainerAccess) container).ironssablecompat$getLastKnownPoses();
+        if (poses == null || index < 0 || index >= poses.length) return null;
+        return poses[index];
     }
 
     private static Vec3 transformStoredToWorld(ServerLevel level, SubLevelData data, Vec3 extremePos) {
         ServerSubLevelContainer container = ServerSubLevelContainer.getContainer(level);
         if (container == null) return extremePos;
 
-        int chunkX = ((int)Math.floor(extremePos.x)) >> 4;
-        int chunkZ = ((int)Math.floor(extremePos.z)) >> 4;
-        int logPlotSize = container.getLogPlotSize();
-        int plotSize = 1 << logPlotSize;
-        int plotX = (chunkX >> logPlotSize) - container.getOrigin().x;
-        int plotZ = (chunkZ >> logPlotSize) - container.getOrigin().y;
+        int chunkX = Mth.floor(extremePos.x) >> 4;
+        int chunkZ = Mth.floor(extremePos.z) >> 4;
+        int plotSize = 1 << container.getLogPlotSize();
+        int plotX = (chunkX >> container.getLogPlotSize()) - container.getOrigin().x;
+        int plotZ = (chunkZ >> container.getLogPlotSize()) - container.getOrigin().y;
 
         Vector3d local = data.pose().transformPositionInverse(
                 new Vector3d(extremePos.x, extremePos.y, extremePos.z));
@@ -69,7 +106,9 @@ public final class SableUnloadedSubLevelCompat {
         if (container == null) return null;
 
         for (SubLevel subLevel : container.getAllSubLevels()) {
-            if (subLevel.getPlot().contains(pos)) {
+            Vector3d world = subLevel.logicalPose().transformPosition(
+                    new Vector3d(pos.x, pos.y, pos.z));
+            if (subLevel.getPlot().contains(new Vec3(world.x, world.y, world.z))) {
                 return subLevel;
             }
         }
@@ -117,7 +156,7 @@ public final class SableUnloadedSubLevelCompat {
     }
 
     private static SubLevelData findInRegionFiles(ServerSubLevelContainer container,
-                                                  int localPlotX, int localPlotZ) {
+                                                   int localPlotX, int localPlotZ) {
         SubLevelStorage storage = container.getHoldingChunkMap().getStorage();
         File[] regionFiles = storage.getFolder().toFile()
                 .listFiles((dir, name) -> name.endsWith(SubLevelRegionFile.FILE_EXTENSION));
