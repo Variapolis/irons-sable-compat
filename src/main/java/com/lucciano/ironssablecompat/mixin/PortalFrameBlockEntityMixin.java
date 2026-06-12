@@ -1,5 +1,4 @@
 package com.lucciano.ironssablecompat.mixin;
-import com.lucciano.ironssablecompat.helpers.SableUnloadedSubLevelCompat;
 import io.redspace.ironsspellbooks.block.portal_frame.PortalFrameBlockEntity;
 import io.redspace.ironsspellbooks.capabilities.magic.PortalManager;
 import io.redspace.ironsspellbooks.entity.spells.portal.PortalData;
@@ -26,15 +25,13 @@ public class PortalFrameBlockEntityMixin {
                 boolean isPrimary = uuid.equals(portalData.portalEntityId1);
                 PortalPos currentPos = isPrimary ? portalData.globalPos1 : portalData.globalPos2;
                 Vec3 extremeLoc = entity.getPortalLocation().add(0, 0.1, 0);
-                Vec3 worldLoc = SableUnloadedSubLevelCompat.resolveDestination(level, extremeLoc);
-                if (currentPos == null || currentPos.pos().distanceToSqr(worldLoc) > 0.01) {
-                    float rotation = currentPos != null ? currentPos.rotation() : 0f;
-                    PortalPos newPos = PortalPos.of(level.dimension(), worldLoc, rotation);
-                    if (isPrimary) {
-                        portalData.globalPos1 = newPos;
-                    } else {
-                        portalData.globalPos2 = newPos;
-                    }
+                float rotation = currentPos != null ? currentPos.rotation() : 0f;
+                // Store raw extreme coords — resolveDestination converts them at teleport time
+                PortalPos newPos = PortalPos.of(level.dimension(), extremeLoc, rotation);
+                if (isPrimary) {
+                    portalData.globalPos1 = newPos;
+                } else {
+                    portalData.globalPos2 = newPos;
                 }
                 // Keep portal entities in sync with the frame when the ship moves
                 teleportPortalEntity(serverLevel, portalData.portalEntityId1, extremeLoc);

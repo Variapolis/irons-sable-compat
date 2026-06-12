@@ -13,7 +13,13 @@
     "PortalFrameBlockMixin",
     "RaycastBuilderMixin",
     "MagicManagerMixin",
-    "ClientMagicDataMixin"
+    "ClientMagicDataMixin",
+    "SubLevelContainerMixin",
+    "SubLevelOccupancySavedDataMixin",
+    "PortalFrameBlockEntityTeleportMixin",
+    "accessor.SubLevelContainerAccess",
+    "accessor.SubLevelHoldingChunkAccessor",
+    "accessor.SubLevelHoldingChunkMapAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
