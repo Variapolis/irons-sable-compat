@@ -10,6 +10,7 @@
     "PortalSpellMixin",
     "TouchDigSpellMixin",
     "PortalFrameBlockEntityMixin",
+    "PortalFrameBlockMixin",
     "RaycastBuilderMixin",
     "MagicManagerMixin",
     "ClientMagicDataMixin"
