@@ -105,10 +105,9 @@ public final class SableUnloadedSubLevelCompat {
         ServerSubLevelContainer container = ServerSubLevelContainer.getContainer(level);
         if (container == null) return null;
 
+        // Plot bounds are in extreme space; pos is in extreme coords
         for (SubLevel subLevel : container.getAllSubLevels()) {
-            Vector3d world = subLevel.logicalPose().transformPosition(
-                    new Vector3d(pos.x, pos.y, pos.z));
-            if (subLevel.getPlot().contains(new Vec3(world.x, world.y, world.z))) {
+            if (subLevel.getPlot().contains(pos)) {
                 return subLevel;
             }
         }
