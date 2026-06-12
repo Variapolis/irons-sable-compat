@@ -29,7 +29,51 @@ public final class SableUnloadedSubLevelCompat {
         if (loaded != null) {
             return Sable.HELPER.projectOutOfSubLevel(level, storagePos);
         }
+
+        if (level instanceof ServerLevel serverLevel) {
+            SubLevel byLocalBounds = findByLocalBounds(serverLevel, storagePos);
+            if (byLocalBounds != null) {
+                return Sable.HELPER.projectOutOfSubLevel(level, storagePos);
+            }
+
+            SubLevelData storedData = findStoredSubLevelData(serverLevel, BlockPos.containing(storagePos));
+            if (storedData != null) {
+                return transformStoredToWorld(serverLevel, storedData, storagePos);
+            }
+        }
+
         return storagePos;
+    }
+
+    private static Vec3 transformStoredToWorld(ServerLevel level, SubLevelData data, Vec3 extremePos) {
+        ServerSubLevelContainer container = ServerSubLevelContainer.getContainer(level);
+        if (container == null) return extremePos;
+
+        int chunkX = ((int)Math.floor(extremePos.x)) >> 4;
+        int chunkZ = ((int)Math.floor(extremePos.z)) >> 4;
+        int logPlotSize = container.getLogPlotSize();
+        int plotSize = 1 << logPlotSize;
+        int plotX = (chunkX >> logPlotSize) - container.getOrigin().x;
+        int plotZ = (chunkZ >> logPlotSize) - container.getOrigin().y;
+
+        Vector3d local = data.pose().transformPositionInverse(
+                new Vector3d(extremePos.x, extremePos.y, extremePos.z));
+
+        double worldX = (double) (container.getOrigin().x + plotX) * 16 * plotSize + local.x;
+        double worldZ = (double) (container.getOrigin().y + plotZ) * 16 * plotSize + local.z;
+        return new Vec3(worldX, local.y, worldZ);
+    }
+
+    private static SubLevel findByLocalBounds(ServerLevel level, Vec3 pos) {
+        ServerSubLevelContainer container = ServerSubLevelContainer.getContainer(level);
+        if (container == null) return null;
+
+        for (SubLevel subLevel : container.getAllSubLevels()) {
+            if (subLevel.getPlot().contains(pos)) {
+                return subLevel;
+            }
+        }
+        return null;
     }
 
     private static SubLevelData findStoredSubLevelData(ServerLevel level, BlockPos targetPos) {

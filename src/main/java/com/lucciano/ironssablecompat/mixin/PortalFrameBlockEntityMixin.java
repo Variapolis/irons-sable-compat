@@ -27,14 +27,12 @@ public class PortalFrameBlockEntityMixin {
                 PortalPos currentPos = isPrimary ? portalData.globalPos1 : portalData.globalPos2;
                 Vec3 extremeLoc = entity.getPortalLocation().add(0, 0.1, 0);
                 Vec3 worldLoc = SableUnloadedSubLevelCompat.resolveDestination(level, extremeLoc);
-                if (currentPos == null || currentPos.pos().distanceToSqr(worldLoc) > 0.01) {
-                    float rotation = currentPos != null ? currentPos.rotation() : 0f;
-                    PortalPos newPos = PortalPos.of(level.dimension(), worldLoc, rotation);
-                    if (isPrimary) {
-                        portalData.globalPos1 = newPos;
-                    } else {
-                        portalData.globalPos2 = newPos;
-                    }
+                float rotation = currentPos != null ? currentPos.rotation() : 0f;
+                PortalPos newPos = PortalPos.of(level.dimension(), worldLoc, rotation);
+                if (isPrimary) {
+                    portalData.globalPos1 = newPos;
+                } else {
+                    portalData.globalPos2 = newPos;
                 }
                 // Keep portal entities in sync with the frame when the ship moves
                 teleportPortalEntity(serverLevel, portalData.portalEntityId1, extremeLoc);
