@@ -2,6 +2,7 @@ package com.lucciano.ironssablecompat.mixin;
 import io.redspace.ironsspellbooks.block.portal_frame.PortalFrameBlockEntity;
 import io.redspace.ironsspellbooks.capabilities.magic.PortalManager;
 import io.redspace.ironsspellbooks.entity.spells.portal.PortalData;
+import io.redspace.ironsspellbooks.entity.spells.portal.PortalEntity;
 import io.redspace.ironsspellbooks.entity.spells.portal.PortalPos;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -42,7 +43,7 @@ public class PortalFrameBlockEntityMixin {
     private static void teleportPortalEntity(ServerLevel level, UUID portalEntityId, Vec3 pos) {
         if (portalEntityId != null) {
             Entity e = level.getEntity(portalEntityId);
-            if (e != null) {
+            if (e instanceof PortalEntity) {
                 e.teleportTo(pos.x, pos.y, pos.z);
             }
         }

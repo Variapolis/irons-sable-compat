@@ -1,6 +1,7 @@
 package com.lucciano.ironssablecompat.mixin;
 
 import com.lucciano.ironssablecompat.helpers.SableUnloadedSubLevelCompat;
+import dev.ryanhcode.sable.api.sublevel.SubLevelContainer;
 import io.redspace.ironsspellbooks.entity.spells.portal.PortalEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
@@ -31,6 +32,10 @@ public class PortalEntityMixin {
     )
     private void redirectPortalTeleport(Entity instance, double x, double y, double z) {
         Level level = instance.level();
+        if (SubLevelContainer.getContainer(level) == null) {
+            instance.teleportTo(x, y, z);
+            return;
+        }
         Vec3 resolved = SableUnloadedSubLevelCompat.resolveDestination(level, new Vec3(x, y, z));
         instance.teleportTo(resolved.x, resolved.y, resolved.z);
     }
